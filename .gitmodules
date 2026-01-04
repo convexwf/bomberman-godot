@@ -1,0 +1,12 @@
+[submodule "godot-cpp"]
+	path = godot-cpp
+	url = git@github.com:godotengine/godot-cpp.git
+[submodule "godot-gdextension-cpp-examples"]
+	path = godot-gdextension-cpp-examples
+	url = git@github.com:convexwf/godot-gdextension-cpp-examples.git
+[submodule "reference/html5-bombergirl"]
+	path = reference/html5-bombergirl
+	url = https://github.com/MattSkala/html5-bombergirl.git
+[submodule "reference/Bombman"]
+	path = reference/Bombman
+	url = https://github.com/drummyfish/Bombman.git
