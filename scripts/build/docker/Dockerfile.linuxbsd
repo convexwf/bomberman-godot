@@ -1,0 +1,16 @@
+# Docker image for building GDExtension on Linux/BSD target platform
+# This uses the native Linux toolchain
+
+ARG img_version=4.5
+FROM godot-fedora-base:${img_version}
+
+WORKDIR /app
+
+# Install Linux build dependencies
+RUN dnf -y install --setopt=install_weak_deps=False \
+      gcc \
+      gcc-c++ \
+      glibc-devel \
+      && dnf clean all
+
+CMD /bin/bash

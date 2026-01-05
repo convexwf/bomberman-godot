@@ -387,3 +387,4 @@ $RECYCLE.BIN/
 
 # specstory
 **/.specstory
+.cursorindexingignore
