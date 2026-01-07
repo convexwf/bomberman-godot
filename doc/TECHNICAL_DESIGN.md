@@ -67,6 +67,12 @@ graph TB
 - **Coordinate System**: Integer-based grid coordinates (x, y)
 - **World Position**: Grid coordinates × tile size
 
+**Coordinate system and alignment (important):**
+- **TileMap default**: Godot TileMap uses **top-left** of each cell as the tile origin; grid (0,0) maps to world (0,0) of that cell’s top-left.
+- **Bomberman convention**: Characters and bombs should stand at the **center** of a cell for consistent movement and collision.
+- **`grid_to_world` in C++**: Must account for TileMap **offset** and **center**. Recommended: `world_pos = (grid.x + 0.5) * tile_size + offset`, so the world position is the cell center. Document the same convention for `world_to_grid` (e.g. floor to integer after subtracting offset and dividing by tile size).
+- **Single source of truth**: Define offset and tile size in one place (e.g. GridManager or project settings) and use the same values for C++ logic and TileMap rendering to avoid misalignment.
+
 #### 3.1.2 Grid Manager (C++)
 **Class**: `GridManager`
 - Manages tile map state
@@ -453,9 +459,10 @@ sequenceDiagram
 ## 7. Implementation Phases
 
 ### Phase 1: Core Foundation
-- [ ] Grid system (GridManager)
-- [ ] Basic player movement
-- [ ] Map loading and rendering
+- [ ] **Validate GDExtension signal/binding**: Minimal C++ node with one signal + one bound method; confirm connect/emit from GDScript before adding game logic.
+- [ ] Grid system (GridManager) with center-aligned `grid_to_world` / `world_to_grid` and documented TileMap offset.
+- [ ] Basic player movement (grid-aligned, cell center).
+- [ ] Map loading and rendering (TileMap same offset/tile size as C++).
 - [ ] Basic bomb placement
 
 ### Phase 2: Gameplay Mechanics
@@ -525,7 +532,20 @@ graph TD
     style E fill:#fff4e1
 ```
 
-## 10. References
+## 10. Implementation Pitfalls and Notes
+
+### 10.1 Coordinate System and TileMap Alignment
+- **Pitfall**: In C++, `grid_to_world` must account for TileMap **offset** and **center**. TileMap defaults to top-left of each cell; Bomberman characters need to stand at the **center** of a cell.
+- **Recommendation**: Implement `grid_to_world(x, y)` as e.g. `(x + 0.5) * tile_size + map_offset`, and use the same `tile_size` and `map_offset` for the TileMap in the editor. Document the convention so C++ and GDScript/TileMap stay in sync.
+
+### 10.2 Signals and Method Binding (GDExtension)
+- **Pitfall**: Signal binding (`ADD_SIGNAL`) and method/property exposure (`ClassDB::bind_method`, `ClassDB::add_property`) are the most error-prone parts for GDExtension beginners; mistakes can cause crashes or silent failures.
+- **Recommendation**: Before implementing bomb or game logic, **run a minimal “Hello World” signal**: one C++ class that emits a signal and one method callable from GDScript. Confirm connect/emit/call work in both directions, then build bomb and gameplay on top of that.
+
+### 10.3 Phase 1 Order
+Do the **GDExtension signal/binding validation** (minimal “Hello World” signal) first; then implement grid, movement, map, and bomb placement so that C++ and Godot stay aligned. See **Section 7** for the full Phase 1 checklist.
+
+## 11. References
 
 - [html5-bombergirl](reference/html5-bombergirl/) - JavaScript implementation reference
 - [Bombman](reference/Bombman/) - Python implementation with advanced features

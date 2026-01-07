@@ -67,6 +67,12 @@ graph TB
 - **坐标系统**: 基于整数的网格坐标 (x, y)
 - **世界位置**: 网格坐标 × 瓦片大小
 
+**坐标系统与对齐（重要）：**
+- **TileMap 默认**：Godot TileMap 以每个格子的**左上角**为瓦片原点，网格 (0,0) 对应该格子左上角的世界坐标。
+- **Bomberman 约定**：角色和炸弹应站在格子的**中心**，以保证移动和碰撞一致。
+- **C++ 中的 `grid_to_world`**：必须考虑 TileMap 的**偏移（Offset）**和**中心点**。推荐：`world_pos = (grid.x + 0.5) * tile_size + offset`，使世界坐标为格子中心。`world_to_grid` 使用同一约定（例如先减 offset 再除以 tile_size 取整）。
+- **单一来源**：在项目里只在一处定义 offset 和 tile_size（如 GridManager 或项目设置），C++ 逻辑与 TileMap 渲染共用，避免错位。
+
 #### 3.1.2 网格管理器 (C++)
 **类**: `GridManager`
 - 管理瓦片地图状态
@@ -453,9 +459,10 @@ sequenceDiagram
 ## 7. 实施阶段
 
 ### 阶段 1: 核心基础
-- [ ] 网格系统 (GridManager)
-- [ ] 基本玩家移动
-- [ ] 地图加载和渲染
+- [ ] **验证 GDExtension 信号/绑定**：先做一个最小 C++ 节点（一个信号 + 一个可从 GDScript 调用的方法），确认 connect/emit 正常后再写游戏逻辑。
+- [ ] 网格系统 (GridManager)，`grid_to_world` / `world_to_grid` 使用格子中心对齐，并明确 TileMap 偏移约定。
+- [ ] 基本玩家移动（网格对齐、格子中心）。
+- [ ] 地图加载和渲染（TileMap 与 C++ 使用相同 offset/tile_size）。
 - [ ] 基本炸弹放置
 
 ### 阶段 2: 游戏机制
@@ -525,7 +532,20 @@ graph TD
     style E fill:#fff4e1
 ```
 
-## 10. 参考资料
+## 10. 实现注意事项与常见坑
+
+### 10.1 坐标系统与 TileMap 对齐
+- **坑**：C++ 中做 `grid_to_world` 时必须考虑 TileMap 的**偏移（Offset）**和**中心点**。TileMap 默认以格子左上角为原点，而 Bomberman 角色需要站在格子**中心**。
+- **建议**：实现 `grid_to_world(x, y)` 时使用例如 `(x + 0.5) * tile_size + map_offset`，并在编辑器里让 TileMap 使用同一 `tile_size` 和 `map_offset`。在文档中写明约定，保证 C++ 与 GDScript/TileMap 一致。
+
+### 10.2 信号与方法绑定（GDExtension）
+- **坑**：信号绑定（`ADD_SIGNAL`）和方法/属性暴露（`ClassDB::bind_method`、`ClassDB::add_property`）是 GDExtension 初学者最容易出错的地方，容易导致崩溃或静默失败。
+- **建议**：在写炸弹或复杂游戏逻辑之前，先**跑通一个最小的「Hello World」信号**：一个 C++ 类发出一个信号、一个可从 GDScript 调用的方法。确认 connect/emit/调用双向都正常后，再在此基础上实现炸弹和玩法。
+
+### 10.3 阶段 1 顺序
+先完成 **GDExtension 信号/绑定验证**（最小「Hello World」信号），再实现网格、移动、地图和炸弹放置，保证 C++ 与 Godot 对齐。完整阶段 1 清单见 **第 7 节**。
+
+## 11. 参考资料
 
 - [html5-bombergirl](reference/html5-bombergirl/) - JavaScript 实现参考
 - [Bombman](reference/Bombman/) - 具有高级功能的 Python 实现
