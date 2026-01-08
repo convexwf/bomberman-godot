@@ -57,6 +57,15 @@ graph TB
 - Collision detection for grid-based gameplay
 - Game rules enforcement
 
+### 2.3 Configuration and theme compatibility
+To support **themes** (e.g. birthday gift mode) and **personalization** without changing core logic, the main game should:
+
+- **Single config source**: Use one project-level or runtime config (e.g. `Resource`, JSON under `res://config/`) for game settings (grid size, tile size, etc.) and optional **theme/gift config** (theme id, display strings, BGM paths). The GDScript layer loads config at startup and exposes it to UI and audio.
+- **Theme id**: Support a `theme_id` (e.g. `"default"` vs `"birthday"`) so that assets (skins, tiles, particles) and BGM/SFX sets can be selected by theme. Core C++ logic stays theme-agnostic; only GDScript and asset paths depend on theme.
+- **UI and BGM from config**: Title, victory, and dedication strings and BGM track paths should be **read from config** (or from a resource filled from config), not hardcoded. This allows a theme document (e.g. [BIRTHDAY_THEME.md](BIRTHDAY_THEME.md)) to define a gift config schema and reuse the same build by swapping config.
+
+Extension points: **config file/resource path**, **theme_id**, **BGM/skin path resolution**. See [BIRTHDAY_THEME.md](BIRTHDAY_THEME.md) for the birthday theme design that plugs into these points.
+
 ## 3. Core Systems Design
 
 ### 3.1 Grid System
@@ -435,6 +444,11 @@ sequenceDiagram
     C++Core->>GDScript: Signal: position_changed
 ```
 
+### 5.3 Configuration and theme compatibility
+- **Config loading**: GDScript (or a dedicated config loader) reads the project config and optional theme/gift config at startup; C++ core receives only data it needs (e.g. grid size), not theme or strings.
+- **BGM and UI**: BGM track selection (menu vs gameplay) and UI strings (title, victory, dedication) come from **config or theme resource**, not hardcoded, so that themes (e.g. birthday) can override them via config. See [BIRTHDAY_THEME.md](BIRTHDAY_THEME.md) for the gift config schema and BGM strategy.
+- **Asset paths**: Theme id drives which asset paths are used for sprites, particles, and audio; keep a single resolution point (e.g. `get_theme_asset(theme_id, asset_key)`) so adding a new theme does not scatter conditionals.
+
 ## 6. Performance Considerations
 
 ### 6.1 Optimization Strategy
@@ -526,11 +540,14 @@ graph TD
     C --> C4[assets/]
     C --> C5[gdextension/]
     C5 --> C6[bomberman.gdextension]
+    C --> C7[config/ or resources/config/<br/>Optional: game_config, theme/gift config]
     
     style B fill:#ffe1f5
     style C fill:#e1f5ff
     style E fill:#fff4e1
 ```
+
+**Configuration and themes:** Optional `config/` or `resources/config/` for game config and theme/gift config (e.g. JSON or Resource). When present, theme id and gift config drive BGM, UI strings, and asset paths. See [BIRTHDAY_THEME.md](BIRTHDAY_THEME.md).
 
 ## 10. Implementation Pitfalls and Notes
 

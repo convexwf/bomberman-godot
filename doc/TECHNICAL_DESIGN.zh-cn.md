@@ -57,6 +57,15 @@ graph TB
 - 基于网格的游戏碰撞检测
 - 游戏规则执行
 
+### 2.3 配置与主题兼容性
+为支持**主题**（如生日礼物模式）和**个人化**且不改动核心逻辑，主游戏应：
+
+- **单一配置源**：使用一个项目级或运行时配置（如 `Resource`、`res://config/` 下 JSON）承载游戏设置（网格大小、瓦片大小等）及可选的**主题/礼物配置**（主题 id、展示文案、BGM 路径）。GDScript 层在启动时加载配置并提供给 UI 与音频。
+- **主题 id**：支持 `theme_id`（如 `"default"` 与 `"birthday"`），以便按主题选择资源（皮肤、瓦片、粒子）和 BGM/SFX 集。核心 C++ 逻辑与主题无关；仅 GDScript 与资源路径依赖主题。
+- **UI 与 BGM 来自配置**：标题、胜利与落款文案及 BGM 曲目路径应从**配置**（或由配置填充的 Resource）读取，不写死。这样主题文档（如 [BIRTHDAY_THEME.zh-cn.md](BIRTHDAY_THEME.zh-cn.md)）可定义礼物配置结构并通过更换配置复用同一构建。
+
+扩展点：**配置文件/Resource 路径**、**theme_id**、**BGM/皮肤路径解析**。生日主题设计见 [BIRTHDAY_THEME.zh-cn.md](BIRTHDAY_THEME.zh-cn.md)。
+
 ## 3. 核心系统设计
 
 ### 3.1 网格系统
@@ -435,6 +444,11 @@ sequenceDiagram
     C++Core->>GDScript: 信号: position_changed
 ```
 
+### 5.3 配置与主题兼容性
+- **配置加载**：GDScript（或独立配置加载器）在启动时读取项目配置与可选主题/礼物配置；C++ 核心只接收其所需数据（如网格大小），不接收主题或文案。
+- **BGM 与 UI**：BGM 曲目选择（菜单 vs 游戏内）与 UI 文案（标题、胜利、落款）来自**配置或主题资源**，不写死，以便主题（如生日）通过配置覆盖。礼物配置结构与 BGM 策略见 [BIRTHDAY_THEME.zh-cn.md](BIRTHDAY_THEME.zh-cn.md)。
+- **资源路径**：主题 id 决定精灵、粒子与音频使用的路径；保持单一解析点（如 `get_theme_asset(theme_id, asset_key)`），避免新增主题时到处写条件分支。
+
 ## 6. 性能考虑
 
 ### 6.1 优化策略
@@ -526,11 +540,14 @@ graph TD
     C --> C4[assets/]
     C --> C5[gdextension/]
     C5 --> C6[bomberman.gdextension]
+    C --> C7[config/ 或 resources/config/<br/>可选：游戏配置、主题/礼物配置]
     
     style B fill:#ffe1f5
     style C fill:#e1f5ff
     style E fill:#fff4e1
 ```
+
+**配置与主题**：可选 `config/` 或 `resources/config/` 存放游戏配置与主题/礼物配置（如 JSON 或 Resource）。若存在，主题 id 与礼物配置驱动 BGM、UI 文案与资源路径。详见 [BIRTHDAY_THEME.zh-cn.md](BIRTHDAY_THEME.zh-cn.md)。
 
 ## 10. 实现注意事项与常见坑
 
