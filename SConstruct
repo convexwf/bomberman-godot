@@ -2,7 +2,8 @@
 import os
 import sys
 
-GODOT_PROJECT_NAME = "demo"
+GODOT_PROJECT_NAME = "bomberman"
+GDEXTENSION_LIB_NAME = "libbomberman"
 env = SConscript("godot-cpp/SConstruct")
 
 # For reference:
@@ -24,14 +25,14 @@ sources = Glob("src/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "{}/gdextension/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
-            GODOT_PROJECT_NAME, env["platform"], env["target"], env["platform"], env["target"]
+        "{}/gdextension/{}.{}.{}.framework/{}.{}.{}".format(
+            GODOT_PROJECT_NAME, GDEXTENSION_LIB_NAME, env["platform"], env["target"], GDEXTENSION_LIB_NAME, env["platform"], env["target"]
         ),
         source=sources,
     )
 else:
     library = env.SharedLibrary(
-        "{}/gdextension/libgdexample{}{}".format(GODOT_PROJECT_NAME, env["suffix"], env["SHLIBSUFFIX"]),
+        "{}/gdextension/{}{}{}".format(GODOT_PROJECT_NAME, GDEXTENSION_LIB_NAME, env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 

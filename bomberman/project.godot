@@ -1,0 +1,17 @@
+; Engine configuration file.
+; Bomberman Phase 1 - GDExtension C++ core.
+
+config_version=5
+
+[application]
+
+config/name="Bomberman"
+run/main_scene="res://scenes/game.tscn"
+
+[display]
+
+window/size/viewport_width=480
+window/size/viewport_height=416
+window/stretch/mode="canvas_items"
+
+[gdextension]

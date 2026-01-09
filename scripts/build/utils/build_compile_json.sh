@@ -17,7 +17,7 @@ else
     exit 1
 fi
 
-TARGET_PLATFORM=${1:-linuxbsd}
+TARGET_PLATFORM=${1:-web}
 
 if ! validate_target_platform "$TARGET_PLATFORM"; then
     log_error "Invalid target platform: $TARGET_PLATFORM"
@@ -29,12 +29,18 @@ log_info "Generating compile_commands.json for $TARGET_PLATFORM"
 TARGET_IMAGE=$(get_docker_image_name "$TARGET_PLATFORM")
 VOLUME_PATH=$(get_volume_path "$PROJECT_DIR")
 
-# Generate compile_commands.json
+# Generate compile_commands.json (web requires emsdk env)
+if [ "$TARGET_PLATFORM" = "web" ]; then
+    SCONS_CMD="source /root/emsdk/emsdk_env.sh && cd /app/godot-cpp && scons platform=web compile_commands.json"
+else
+    SCONS_CMD="cd /app/godot-cpp && scons platform=$TARGET_PLATFORM compile_commands.json"
+fi
+
 docker run --rm \
     -v "$VOLUME_PATH:/app" \
     -w /app \
     "$TARGET_IMAGE" \
-    bash -c "cd /app/godot-cpp && scons platform=$TARGET_PLATFORM compile_commands.json"
+    bash -c "$SCONS_CMD"
 
 # Copy to project root and fix paths
 if [ -f "$PROJECT_DIR/godot-cpp/compile_commands.json" ]; then

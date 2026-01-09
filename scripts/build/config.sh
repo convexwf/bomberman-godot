@@ -8,8 +8,17 @@ GODOT_VERSION="${GODOT_VERSION:-4.5}"
 SUPPORTED_HOST_PLATFORMS=("linux" "macos")
 
 # Supported target platforms (build targets)
-# Using Godot's official platform naming convention
-SUPPORTED_TARGET_PLATFORMS=("linuxbsd" "macos" "windows" "web" "android")
+# Canonical names = godot-cpp SCons / .gdextension keys (Godot engine uses "linuxbsd" internally; we use "linux")
+SUPPORTED_TARGET_PLATFORMS=("linux" "macos" "windows" "web" "android")
+
+# Platform aliases: alternative names accepted from CLI, mapped to canonical name above
+# Example: linuxbsd (Godot OS name) -> linux (SCons/gdextension)
+normalize_target_platform() {
+    case "$1" in
+        linuxbsd) echo "linux" ;;
+        *)        echo "$1" ;;
+    esac
+}
 
 # Docker image naming
 DOCKER_BASE_IMAGE="godot-fedora-base"
@@ -108,7 +117,7 @@ get_volume_path() {
     fi
 }
 
-# Build SCons command for target platform
+# Build SCons command for target platform (platform name passed directly to scons)
 build_scons_command() {
     local target=$1
     local build_target=$2  # template_debug or template_release
@@ -118,7 +127,6 @@ build_scons_command() {
             echo "source /root/emsdk/emsdk_env.sh && scons platform=web target=$build_target"
             ;;
         android)
-            # Android may need additional setup
             echo "scons platform=android target=$build_target"
             ;;
         *)

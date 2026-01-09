@@ -1,5 +1,5 @@
-# Docker image for building GDExtension on Linux/BSD target platform
-# This uses the native Linux toolchain
+# Docker image for building GDExtension on Linux target platform
+# Uses the same platform name as godot-cpp SCons and .gdextension: "linux"
 
 ARG img_version=4.5
 FROM godot-fedora-base:${img_version}

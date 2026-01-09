@@ -1,0 +1,15 @@
+[configuration]
+
+entry_symbol = "bomberman_library_init"
+compatibility_minimum = "4.5"
+
+[libraries]
+
+linux.debug.x86_64 = "res://gdextension/libbomberman.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://gdextension/libbomberman.linux.template_release.x86_64.so"
+windows.debug.x86_64 = "res://gdextension/libbomberman.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://gdextension/libbomberman.windows.template_release.x86_64.dll"
+macos.debug = "res://gdextension/libbomberman.macos.template_debug.framework"
+macos.release = "res://gdextension/libbomberman.macos.template_release.framework"
+web.debug = "res://gdextension/libbomberman.web.template_debug.wasm32.wasm"
+web.release = "res://gdextension/libbomberman.web.template_release.wasm32.wasm"

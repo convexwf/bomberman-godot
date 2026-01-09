@@ -10,8 +10,8 @@ The platform where you develop and run the build scripts:
 - **macos**: macOS
 
 ### Target Platform (目标平台)
-The platform where the compiled extension will run:
-- **linuxbsd**: Linux/BSD (using Godot's naming convention)
+The platform where the compiled extension will run (canonical names = godot-cpp/.gdextension; aliases accepted):
+- **linux**: Linux/BSD (alias: `linuxbsd`, Godot’s internal name)
 - **macos**: macOS
 - **windows**: Windows
 - **web**: Web (Emscripten/WebAssembly)
@@ -22,26 +22,23 @@ The platform where the compiled extension will run:
 ### Build for a specific platform
 
 ```bash
-# Build for Linux/BSD (both debug and release)
-./build.sh linuxbsd
+# Build for Web (recommended for development verification)
+./build.sh web template_debug
+
+# Build for Linux/BSD (both debug and release; linuxbsd also accepted)
+./build.sh linux
 
 # Build for Windows
 ./build.sh windows
 
-# Build for Web
-./build.sh web
-
 # Build only release template
-./build.sh linuxbsd template_release
-
-# Build only debug template
-./build.sh windows template_debug
+./build.sh web template_release
 ```
 
 ### Generate compile_commands.json for IDE support
 
 ```bash
-./utils/build_compile_json.sh linuxbsd
+./utils/build_compile_json.sh web
 ```
 
 ## Directory Structure
@@ -53,7 +50,7 @@ scripts/build/
 ├── config.sh             # Configuration and utilities
 ├── docker/               # Docker images for each target platform
 │   ├── Dockerfile.base   # Base image with common tools
-│   ├── Dockerfile.linuxbsd
+│   ├── Dockerfile.linux
 │   ├── Dockerfile.macos
 │   ├── Dockerfile.windows
 │   ├── Dockerfile.web
@@ -73,8 +70,8 @@ The build system supports different target types:
 
 ## Platform-Specific Notes
 
-### Linux/BSD (linuxbsd)
-Uses native GCC toolchain. No special requirements.
+### Linux/BSD (linux; alias linuxbsd)
+Uses native GCC toolchain. No special requirements. Use `./build.sh linux` or `./build.sh linuxbsd`.
 
 ### macOS (macos)
 **Note**: macOS builds typically require:
@@ -123,7 +120,7 @@ Images are built automatically on first use. To rebuild:
 docker build -t godot-fedora-base:4.3 -f docker/Dockerfile.base docker/
 
 # Rebuild target image
-docker build --build-ARG img_version=4.5 -t godot-linuxbsd:4.3 -f docker/Dockerfile.linuxbsd docker/
+docker build --build-arg img_version=4.5 -t godot-linux:4.5 -f docker/Dockerfile.linux docker/
 ```
 
 ## Troubleshooting

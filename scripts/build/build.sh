@@ -4,8 +4,8 @@
 # Usage:
 #   ./build.sh <target_platform> [target_type]
 #
-# Target platforms (using Godot naming):
-#   - linuxbsd  : Linux/BSD
+# Target platforms (canonical names = godot-cpp SCons / .gdextension; aliases accepted):
+#   - linux     : Linux/BSD (alias: linuxbsd)
 #   - macos     : macOS
 #   - windows   : Windows
 #   - web       : Web (Emscripten)
@@ -18,9 +18,9 @@
 #   - all             : Build both debug and release (default)
 #
 # Examples:
-#   ./build.sh linuxbsd
+#   ./build.sh web template_debug
+#   ./build.sh linux
 #   ./build.sh windows all
-#   ./build.sh web template_release
 
 set -e
 
@@ -33,8 +33,8 @@ else
     exit 1
 fi
 
-# Parse arguments
-TARGET_PLATFORM=$1
+# Parse arguments and normalize platform (e.g. linuxbsd -> linux)
+TARGET_PLATFORM=$(normalize_target_platform "${1:-}")
 TARGET_TYPE=${2:-all}
 
 # Validate arguments
