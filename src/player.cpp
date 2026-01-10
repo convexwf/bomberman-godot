@@ -44,8 +44,7 @@ Player::~Player() {}
 
 void Player::_ready() {
 	if (!grid_manager_path.is_empty()) {
-		Node *node = get_node(grid_manager_path);
-		grid_manager = Object::cast_to<GridManager>(node);
+		grid_manager = get_node<GridManager>(grid_manager_path);
 	}
 	_update_world_position();
 }

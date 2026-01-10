@@ -27,6 +27,8 @@ func _ready() -> void:
 		"""
 	grid_manager.load_map_from_string(map_data)
 	player.set_grid_position(1, 1)
+	# Phase 1 verification: confirm C++ signal is emitted
+	player.grid_position_changed.connect(_on_player_grid_position_changed)
 	# Try to load Bomb scene if exists (optional)
 	if ResourceLoader.exists("res://scenes/bomb.tscn"):
 		bomb_scene = load("res://scenes/bomb.tscn") as PackedScene
@@ -61,6 +63,9 @@ func _try_place_bomb() -> void:
 		player.place_bomb()
 		# Simulate explosion after 2s (call on_bomb_exploded)
 		get_tree().create_timer(2.0).timeout.connect(player.on_bomb_exploded)
+
+func _on_player_grid_position_changed(grid_pos: Vector2i) -> void:
+	print("[Phase 1] grid_position_changed: ", grid_pos)
 
 func _on_bomb_exploded(_gx: int, _gy: int, bomb: Bomb) -> void:
 	player.on_bomb_exploded()

@@ -32,9 +32,10 @@ void GridManager::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "tile_size"), "set_tile_size", "get_tile_size");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "map_offset"), "set_map_offset", "get_map_offset");
 
-	BIND_ENUM_CONSTANT(TILE_FLOOR);
-	BIND_ENUM_CONSTANT(TILE_WALL);
-	BIND_ENUM_CONSTANT(TILE_DESTRUCTIBLE);
+	// Bind enum as integer constants (godot-cpp has no GetTypeInfo for custom enums)
+	ClassDB::bind_integer_constant(get_class_static(), "TileType", "TILE_FLOOR", TILE_FLOOR);
+	ClassDB::bind_integer_constant(get_class_static(), "TileType", "TILE_WALL", TILE_WALL);
+	ClassDB::bind_integer_constant(get_class_static(), "TileType", "TILE_DESTRUCTIBLE", TILE_DESTRUCTIBLE);
 }
 
 GridManager::GridManager() {
@@ -129,7 +130,7 @@ void GridManager::load_map_from_string(const String &p_map_data) {
 		if (line.is_empty()) continue;
 		if (row >= grid_height) break;
 		for (int col = 0; col < line.length() && col < grid_width; col++) {
-			CharType c = line[col];
+			char32_t c = line[col];
 			if (c == '#') set_tile(col, row, TILE_WALL);
 			else if (c == 'x' || c == 'X') set_tile(col, row, TILE_DESTRUCTIBLE);
 			else set_tile(col, row, TILE_FLOOR);
