@@ -3,6 +3,7 @@
 #include "grid_manager.h"
 #include "player.h"
 #include "bomb.h"
+#include "power_up.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -18,6 +19,7 @@ void initialize_bomberman_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<GridManager>();
 	ClassDB::register_class<Player>();
 	ClassDB::register_class<Bomb>();
+	ClassDB::register_class<PowerUp>();
 }
 
 void uninitialize_bomberman_module(ModuleInitializationLevel p_level) {

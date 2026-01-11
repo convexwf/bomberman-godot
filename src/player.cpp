@@ -16,6 +16,8 @@ void Player::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("can_place_bomb"), &Player::can_place_bomb);
 	ClassDB::bind_method(D_METHOD("place_bomb"), &Player::place_bomb);
 	ClassDB::bind_method(D_METHOD("on_bomb_exploded"), &Player::on_bomb_exploded);
+	ClassDB::bind_method(D_METHOD("die"), &Player::die);
+	ClassDB::bind_method(D_METHOD("take_damage"), &Player::take_damage);
 	ClassDB::bind_method(D_METHOD("set_move_speed", "speed"), &Player::set_move_speed);
 	ClassDB::bind_method(D_METHOD("get_move_speed"), &Player::get_move_speed);
 	ClassDB::bind_method(D_METHOD("set_bomb_capacity", "cap"), &Player::set_bomb_capacity);
@@ -36,6 +38,7 @@ void Player::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "is_alive"), "set_is_alive", "get_is_alive");
 
 	ADD_SIGNAL(MethodInfo("grid_position_changed", PropertyInfo(Variant::VECTOR2I, "grid_pos")));
+	ADD_SIGNAL(MethodInfo("died"));
 }
 
 Player::Player() {}
@@ -101,6 +104,18 @@ void Player::place_bomb() {
 
 void Player::on_bomb_exploded() {
 	if (active_bombs > 0) active_bombs--;
+}
+
+void Player::die() {
+	if (!is_alive) return;
+	is_alive = false;
+	emit_signal("died");
+}
+
+bool Player::take_damage() {
+	if (!is_alive) return false;
+	die();
+	return true;
 }
 
 void Player::set_move_speed(double p_speed) { move_speed = p_speed; }

@@ -32,6 +32,8 @@ void GridManager::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "tile_size"), "set_tile_size", "get_tile_size");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "map_offset"), "set_map_offset", "get_map_offset");
 
+	ADD_SIGNAL(MethodInfo("tile_destroyed", PropertyInfo(Variant::INT, "x"), PropertyInfo(Variant::INT, "y")));
+
 	// Bind enum as integer constants (godot-cpp has no GetTypeInfo for custom enums)
 	ClassDB::bind_integer_constant(get_class_static(), "TileType", "TILE_FLOOR", TILE_FLOOR);
 	ClassDB::bind_integer_constant(get_class_static(), "TileType", "TILE_WALL", TILE_WALL);
@@ -119,6 +121,7 @@ int GridManager::get_tile(int x, int y) const {
 void GridManager::destroy_tile(int x, int y) {
 	if (is_tile_destructible(x, y)) {
 		set_tile(x, y, TILE_FLOOR);
+		emit_signal("tile_destroyed", x, y);
 	}
 }
 

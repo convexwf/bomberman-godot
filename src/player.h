@@ -55,6 +55,10 @@ public:
 	void place_bomb();
 	void on_bomb_exploded();
 
+	// Phase 2: damage/death
+	void die();
+	bool take_damage();
+
 	// Properties
 	void set_move_speed(double p_speed);
 	double get_move_speed() const;
@@ -67,7 +71,7 @@ public:
 	void set_is_alive(bool p_alive);
 	bool get_is_alive() const;
 
-	// Signal: emitted when grid position changes (for GDScript to sync visuals)
+	// Signals: grid_position_changed, died (Phase 2)
 	// ADD_SIGNAL in .cpp
 };
 

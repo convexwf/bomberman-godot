@@ -60,6 +60,9 @@ public:
 
 	/** Load map from string: . = floor, # = wall, x = destructible. Lines are rows. */
 	void load_map_from_string(const String &p_map_data);
+
+	// Signal: emitted when a destructible tile is destroyed (for GDScript to update TileMap / spawn power-up)
+	// ADD_SIGNAL in .cpp
 };
 
 } // namespace godot

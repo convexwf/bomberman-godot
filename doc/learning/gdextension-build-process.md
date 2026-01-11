@@ -122,7 +122,7 @@ bomberman/gdextension/
 | --------- | ------------ | ------------------------------------------------ |
 | Web       | `.wasm`      | `libbomberman.web.template_debug.wasm32.wasm`    |
 | Windows   | `.dll`       | `libbomberman.windows.template_debug.x86_64.dll` |
-| Linux/BSD | `.so`        | `libbomberman.linux.template_debug.x86_64.so`   |
+| Linux/BSD | `.so`        | `libbomberman.linux.template_debug.x86_64.so`    |
 | macOS     | `.framework` | `libbomberman.macos.template_debug.framework/`   |
 | Android   | `.so`        | `libbomberman.android.template_debug.arm64.so`   |
 
@@ -250,65 +250,11 @@ godot-cpp/SConstruct
 3. **要添加功能需要源代码**：在 `src/` 目录下添加你的 `.cpp` 文件
 4. **最终产物是共享库**：`.wasm`、`.dll`、`.so` 或 `.framework` 格式
 
-## Phase 1 验证（仅 Web）
+## 项目阶段实现记录
 
-按项目约定，开发阶段只用 **web** 平台验证 GDExtension。
+项目各阶段「做了哪些事」与本地验证步骤，放在 **project** 目录下，不混入本学习笔记：
 
-### 1. 构建
-
-```bash
-./scripts/build/build.sh web template_debug
-```
-
-产物：`bomberman/gdextension/libbomberman.web.template_debug.wasm32.wasm`。
-
-### 2. 在 Godot 中确认扩展加载
-
-1. 用 Godot 4.5+ 打开 `bomberman/project.godot`。
-2. 菜单 **Project → Export…**，添加 **Web** 预设并保存（若无）。
-3. 导出为 Web，在浏览器中运行；或先 **运行主场景（F5）** 在编辑器中跑（此时加载的是当前平台库，若在 macOS/Windows 上则不会加载 .wasm）。
-4. **真正验证 web 扩展**：导出 → 选择 Web → 导出项目，用本地 HTTP 或 Godot 提供的简易服务器打开导出的页面，在浏览器中运行。控制台无 GDExtension 加载错误即表示扩展加载成功。
-
-### 3. 验证信号与绑定方法
-
-- **信号**：`Player.grid_position_changed(grid_pos: Vector2i)`。在 `game.gd` 中可用 `player.grid_position_changed.connect(func(pos): print("grid_pos: ", pos))`，用方向键移动，看控制台是否打印新格子坐标。
-- **绑定方法**：方向键调用 `player.move_direction(dx, dy)`，空格放置炸弹并调用 `player.place_bomb()` / `player.on_bomb_exploded()`，无报错即表示 C++ 绑定正常。
-
-### 4. 检查清单
-
-- [ ] `./scripts/build/build.sh web template_debug` 构建成功
-- [ ] `bomberman/gdextension/libbomberman.web.template_debug.wasm32.wasm` 存在
-- [ ] Godot 导出 Web 并在浏览器中运行，无 GDExtension 加载错误
-- [ ] 移动玩家时 `grid_position_changed` 有预期输出（若已连接）
-- [ ] 放置/爆炸炸弹流程无报错
-
-### 5. 本地需要做的（待验证时执行）
-
-构建与代码已就绪后，以下步骤需在本地 Godot + 浏览器中执行（暂时无法验证时可先跳过，之后按此清单补验）：
-
-1. **打开项目**  
-   用 Godot 4.5+ 打开仓库中的 `bomberman/project.godot`。
-
-2. **配置 Web 导出**  
-   - 菜单 **Project → Export…**  
-   - 若无 Web 预设：**Add… → Web**，保存（如保存到 `export_presets.cfg`）。  
-   - 确保导出路径与运行方式符合你本地习惯（例如导出到 `bomberman/export/web/` 再用本地 HTTP 或 Godot 的“运行”打开）。
-
-3. **验证 Web 扩展加载**  
-   - 导出 → 选择 **Web** → 导出项目（或导出并运行）。  
-   - 在浏览器中打开导出的页面。  
-   - 打开浏览器开发者工具控制台，确认无 GDExtension 加载错误（无报红、无 “failed to load” 等）。
-
-4. **验证信号**  
-   - 在游戏中用方向键移动玩家。  
-   - 控制台应出现 `[Phase 1] grid_position_changed: (x, y)`（已在 `game.gd` 中连接该信号）。  
-   - 若无输出，检查 GDExtension 是否加载成功、主场景是否为 `scenes/game.tscn`。
-
-5. **验证绑定方法**  
-   - 用空格（或 `ui_accept`）放置炸弹，等待爆炸或计时器触发。  
-   - 确认无报错、炸弹数量/冷却表现符合预期。
-
-全部通过后，可在检查清单中勾选对应项。
+- **[Phase 1、Phase 2 实现记录](../project/phase1-phase2.md)**：阶段 1、2 的已实现内容与本地验证汇总（仅 Web）。
 
 ## 参考
 
