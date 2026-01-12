@@ -64,6 +64,7 @@ public:
 	double get_move_speed() const;
 	void set_bomb_capacity(int p_cap);
 	int get_bomb_capacity() const;
+	int get_active_bombs() const;
 	void set_flame_range(int p_range);
 	int get_flame_range() const;
 	void set_grid_manager_path(const NodePath &p_path);

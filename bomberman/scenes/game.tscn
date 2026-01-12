@@ -11,8 +11,70 @@ grid_height = 9
 tile_size = 32
 position = Vector2(16, 16)
 
+[node name="MapTileMap" type="TileMap" parent="."]
+position = Vector2(16, 16)
+
 [node name="Player" type="Player" parent="."]
 position = Vector2(48, 48)
 grid_manager_path = NodePath("..GridManager")
 
 [node name="BombsContainer" type="Node2D" parent="."]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="BombsLabel" type="Label" parent="HUD"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 120.0
+offset_bottom = 28.0
+text = "Bombs: 1/1"
+
+[node name="FlameLabel" type="Label" parent="HUD"]
+offset_left = 8.0
+offset_top = 32.0
+offset_right = 100.0
+offset_bottom = 52.0
+text = "Flame: 1"
+
+[node name="GameOver" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Panel" type="Panel" parent="GameOver"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="GameOver/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -40.0
+offset_right = 80.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 28
+text = "Game Over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartButton" type="Button" parent="GameOver/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = 20.0
+offset_right = 50.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Restart"

@@ -250,12 +250,6 @@ godot-cpp/SConstruct
 3. **要添加功能需要源代码**：在 `src/` 目录下添加你的 `.cpp` 文件
 4. **最终产物是共享库**：`.wasm`、`.dll`、`.so` 或 `.framework` 格式
 
-## 项目阶段实现记录
-
-项目各阶段「做了哪些事」与本地验证步骤，放在 **project** 目录下，不混入本学习笔记：
-
-- **[Phase 1、Phase 2 实现记录](../project/phase1-phase2.md)**：阶段 1、2 的已实现内容与本地验证汇总（仅 Web）。
-
 ## 参考
 
 - [Godot GDExtension C++ Example](https://docs.godotengine.org/en/stable/tutorials/scripting/gdextension/gdextension_cpp_example.html)

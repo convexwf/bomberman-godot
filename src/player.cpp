@@ -22,6 +22,7 @@ void Player::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_move_speed"), &Player::get_move_speed);
 	ClassDB::bind_method(D_METHOD("set_bomb_capacity", "cap"), &Player::set_bomb_capacity);
 	ClassDB::bind_method(D_METHOD("get_bomb_capacity"), &Player::get_bomb_capacity);
+	ClassDB::bind_method(D_METHOD("get_active_bombs"), &Player::get_active_bombs);
 	ClassDB::bind_method(D_METHOD("set_flame_range", "range"), &Player::set_flame_range);
 	ClassDB::bind_method(D_METHOD("get_flame_range"), &Player::get_flame_range);
 	ClassDB::bind_method(D_METHOD("set_grid_manager_path", "path"), &Player::set_grid_manager_path);
@@ -122,6 +123,7 @@ void Player::set_move_speed(double p_speed) { move_speed = p_speed; }
 double Player::get_move_speed() const { return move_speed; }
 void Player::set_bomb_capacity(int p_cap) { bomb_capacity = p_cap; }
 int Player::get_bomb_capacity() const { return bomb_capacity; }
+int Player::get_active_bombs() const { return active_bombs; }
 void Player::set_flame_range(int p_range) { flame_range = p_range; }
 int Player::get_flame_range() const { return flame_range; }
 void Player::set_grid_manager_path(const NodePath &p_path) { grid_manager_path = p_path; }

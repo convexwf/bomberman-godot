@@ -2,6 +2,8 @@
 
 记录项目在阶段 1、阶段 2 **做了哪些事**，以及本地如何验证（仅 Web）。
 
+**阶段 3** 见 [phase3.md](phase3.md)（TileMap、HUD、Game Over、阶段 1/2 遗漏说明）。
+
 ## 构建
 
 ```bash
@@ -94,3 +96,12 @@
 - [ ] Phase 2：破坏砖后有机会出现道具，收集后能力提升
 
 全部通过后，可在上述清单中勾选对应项。
+
+---
+
+## 阶段 1/2 回顾与遗漏
+
+- **Phase 1**  
+  - **Map rendering**：设计中的「Map loading and rendering (TileMap same offset/tile size)」在阶段 1 只做了 `load_map_from_string`，无 TileMap 显示；**阶段 3 已补**（见 [phase3.md](phase3.md)）。  
+  - **load_map_from_file**：未在 C++ 实现；可用 GDScript 读文件后调用 `load_map_from_string` 等效实现。  
+- **Phase 2**：无遗漏。
