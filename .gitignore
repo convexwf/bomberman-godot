@@ -21,7 +21,8 @@
 ###########################
 ### Build configuration ###
 ###########################
-
+bin/*
+!bin/**/*.gdextension
 /custom.py
 misc/hooks/pre-commit-custom-*
 
@@ -384,7 +385,3 @@ $RECYCLE.BIN/
 *.import
 **/export
 **/export_template
-
-# specstory
-**/.specstory
-.cursorindexingignore

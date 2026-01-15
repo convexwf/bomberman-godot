@@ -1,6 +1,7 @@
 [submodule "godot-cpp"]
 	path = godot-cpp
 	url = git@github.com:godotengine/godot-cpp.git
+    branch = master
 [submodule "godot-gdextension-cpp-examples"]
 	path = godot-gdextension-cpp-examples
 	url = git@github.com:convexwf/godot-gdextension-cpp-examples.git
