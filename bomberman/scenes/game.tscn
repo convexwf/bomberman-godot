@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://bomberman_game"]
+[gd_scene load_steps=3 format=3 uid="uid://bomberman_game"]
 
 [ext_resource type="Script" path="res://scenes/game.gd" id="1_game"]
+
+[sub_resource type="CircleShape2D" id="1_circle_shape"]
+radius = 14.0
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_game")
@@ -11,12 +14,18 @@ grid_height = 9
 tile_size = 32
 position = Vector2(16, 16)
 
-[node name="MapTileMap" type="TileMap" parent="."]
+[node name="MapTileMap" type="TileMapLayer" parent="."]
 position = Vector2(16, 16)
 
 [node name="Player" type="Player" parent="."]
 position = Vector2(48, 48)
-grid_manager_path = NodePath("..GridManager")
+grid_manager_path = NodePath("../GridManager")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("1_circle_shape")
+[node name="Body" type="Polygon2D" parent="Player"]
+polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+color = Color(0.3, 0.6, 1, 1)
 
 [node name="BombsContainer" type="Node2D" parent="."]
 

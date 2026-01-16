@@ -1,5 +1,11 @@
-[gd_scene load_steps=1 format=3 uid="uid://bomberman_bomb"]
+[gd_scene load_steps=2 format=3 uid="uid://bomberman_bomb"]
 
-[node name="Bomb" type="Bomb" parent="."]
+[sub_resource type="CircleShape2D" id="1_circle_shape"]
+radius = 14.0
+
+[node name="Bomb" type="Bomb"]
 explosion_time = 2.0
 flame_range = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bomb"]
+shape = SubResource("1_circle_shape")

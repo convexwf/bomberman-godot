@@ -2,7 +2,7 @@ extends Node2D
 ## Phase 1+2+3: Input, bomb, explosion, tile destruction, player death, power-up; TileMap, HUD, Game Over.
 
 @onready var grid_manager: GridManager = $GridManager
-@onready var map_tile_map: TileMap = $MapTileMap
+@onready var map_tile_map: TileMapLayer = $MapTileMap
 @onready var player: Player = $Player
 @onready var bombs_container: Node2D = $BombsContainer
 @onready var bombs_label: Label = $HUD/BombsLabel
@@ -13,7 +13,6 @@ extends Node2D
 var bomb_scene: PackedScene
 var power_ups_container: Node2D
 
-const MAP_LAYER := 0
 const TILE_SOURCE_ID := 0
 
 func _ready() -> void:
@@ -76,10 +75,10 @@ func _refresh_map_from_grid() -> void:
 	for y in h:
 		for x in w:
 			var t := grid_manager.get_tile(x, y)
-			map_tile_map.set_cell(MAP_LAYER, Vector2i(x, y), TILE_SOURCE_ID, Vector2i(t, 0))
+			map_tile_map.set_cell(Vector2i(x, y), TILE_SOURCE_ID, Vector2i(t, 0))
 
 func _set_tile_visual(x: int, y: int, tile_type: int) -> void:
-	map_tile_map.set_cell(MAP_LAYER, Vector2i(x, y), TILE_SOURCE_ID, Vector2i(tile_type, 0))
+	map_tile_map.set_cell(Vector2i(x, y), TILE_SOURCE_ID, Vector2i(tile_type, 0))
 
 func _update_hud() -> void:
 	if bombs_label:
